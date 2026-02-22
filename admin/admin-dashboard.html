@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard · Crimson Shield</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #0b1219 0%, #151f2c 100%);
+  color: #e2e8f0;
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width:260px;
+  background:rgba(18,25,35,0.95);
+  border-right:1px solid rgba(220,38,38,0.2);
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+}
+
+.logo {
+  font-size:1.6rem;
+  font-weight:800;
+  margin-bottom:3rem;
+}
+.logo span { color:#dc2626; }
+
+.nav button {
+  width:100%;
+  padding:1rem;
+  margin-bottom:1rem;
+  border:none;
+  border-radius:15px;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav button:hover,
+.nav button.active {
+  background:rgba(220,38,38,0.15);
+  color:white;
+}
+
+.sidebar-footer{
+  margin-top:auto;
+}
+
+.logout {
+  background:#dc2626;
+  border:none;
+  padding:0.8rem;
+  border-radius:15px;
+  color:white;
+  cursor:pointer;
+  width:100%;
+}
+
+/* MAIN */
+.main {
+  flex:1;
+  padding:2rem;
+}
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:2rem;
+}
+
+.status-indicator {
+  background:#10b981;
+  padding:0.4rem 1rem;
+  border-radius:20px;
+  font-size:0.8rem;
+  color:#0b1219;
+  font-weight:600;
+}
+
+/* STATS */
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1.5rem;
+  margin-bottom:2rem;
+}
+
+.card {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(220,38,38,0.2);
+  padding:1.5rem;
+  border-radius:20px;
+}
+
+.card h3 {
+  font-size:0.85rem;
+  color:#94a3b8;
+}
+
+.card .value {
+  font-size:2rem;
+  font-weight:700;
+  margin-top:0.5rem;
+}
+
+/* PRIORITY BOX */
+.priority-box {
+  background:rgba(220,38,38,0.1);
+  border:1px solid rgba(220,38,38,0.4);
+  padding:1rem;
+  border-radius:15px;
+  margin-bottom:2rem;
+}
+
+/* BLOOD STOCK */
+.stock-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1rem;
+  margin-bottom:2rem;
+}
+
+.stock-card {
+  background:rgba(255,255,255,0.03);
+  border-radius:15px;
+  padding:1rem;
+  text-align:center;
+}
+
+.stock-card span {
+  display:block;
+  font-size:1.4rem;
+  font-weight:700;
+  margin-top:0.5rem;
+}
+
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div>
+    <div class="logo">Crimson<span>Shield</span></div>
+
+    <div class="nav">
+      <button onclick="goDashboard()">Dashboard</button>
+      <button onclick="goAddDonor()">Add Donor</button>
+      <button onclick="goFindBlood()">Find Blood</button>
+      <button onclick="goTrackDonor()">Track Donor</button>
+      <button onclick="goAnalytics()">Analytics</button>
+      <button onclick="goProfile()">Profile</button>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h1>Admin Dashboard</h1>
+    <span class="status-indicator">System Online</span>
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <h3>Active Emergencies</h3>
+      <div class="value">3</div>
+    </div>
+    <div class="card">
+      <h3>Total Donors</h3>
+      <div class="value">145</div>
+    </div>
+    <div class="card">
+      <h3>Alerts Sent</h3>
+      <div class="value">8</div>
+    </div>
+    <div class="card">
+      <h3>Fulfilled Cases</h3>
+      <div class="value">21</div>
+    </div>
+  </div>
+
+  <div class="priority-box">
+    🚨 <strong>High Priority:</strong> O- blood required at City Hospital (2 Units)
+  </div>
+
+  <h2>Blood Stock Overview</h2>
+  <div class="stock-grid">
+    <div class="stock-card">O+ <span>24</span></div>
+    <div class="stock-card">O- <span>5</span></div>
+    <div class="stock-card">A+ <span>18</span></div>
+    <div class="stock-card">B+ <span>12</span></div>
+  </div>
+
+</div>
+
+<script>
+
+function goDashboard(){
+  window.location.href="admin-dashboard.html";
+}
+
+function goAddDonor(){
+  window.location.href="add-eligible-donor.html";
+}
+
+function goFindBlood(){
+  window.location.href="contact-network.html";
+}
+
+function goTrackDonor(){
+  window.location.href="ambulance-tracking.html";
+}
+function goAnalytics(){
+  window.location.href="analytics.html";
+}
+function goProfile(){
+  window.location.href="admin-profile.html";
+}
+
+function logout(){
+  window.location.href="index.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login · Crimson Shield</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #0b1219 0%, #151f2c 100%);
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .login-container {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(220,38,38,0.2);
+      border-radius: 30px;
+      padding: 3rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .logo span { color: #dc2626; }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: white;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 15px;
+      border: 1px solid rgba(220,38,38,0.2);
+      background: rgba(0,0,0,0.3);
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 1rem;
+      background: linear-gradient(145deg, #dc2626, #b91c1c);
+      color: white;
+      box-shadow: 0 10px 25px rgba(220,38,38,0.4);
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(220,38,38,0.6);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .back-link a {
+      color: #dc2626;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+
+    <div class="logo">
+      Crimson<span>Shield</span>
+    </div>
+
+    <h2>🔐 Admin Login</h2>
+
+    <!-- form now simply navigates to admin-dashboard on submit (no supabase) -->
+    <form id="adminLoginForm" onsubmit="window.location.href = 'admin-dashboard.html'; return false;">
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="adminEmail" placeholder="admin@crimson.com" required>
+      </div>
+    
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter password">
+      </div>
+    
+      <button type="submit" class="btn">Login as Admin</button>
+    
+    </form>
+
+    <div class="back-link">
+      <a href="index.html">← Back to Home</a>
+    </div>
+
+  </div>
+
+  <!-- No Supabase script – login button acts as a direct link to dashboard -->
+</body>
+</html>

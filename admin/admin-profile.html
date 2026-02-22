@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospital Profile · Crimson Shield</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #0b1219 0%, #151f2c 100%);
+  color:#e2e8f0;
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width:260px;
+  background:rgba(18,25,35,0.95);
+  border-right:1px solid rgba(220,38,38,0.2);
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.logo {
+  font-size:1.6rem;
+  font-weight:800;
+  margin-bottom:2.5rem;
+}
+.logo span { color:#dc2626; }
+
+.nav {
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+}
+
+.nav-item {
+  width:100%;
+  padding:0.9rem 1rem;
+  border:none;
+  border-radius:15px;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  cursor:pointer;
+  font-size:0.95rem;
+  transition:0.3s ease;
+}
+
+.nav-item:hover {
+  background:rgba(220,38,38,0.15);
+  color:white;
+  transform:translateX(4px);
+}
+
+.nav-item.active {
+  background:rgba(220,38,38,0.25);
+  color:white;
+  border-left:4px solid #dc2626;
+}
+
+.logout {
+  background:#dc2626;
+  border:none;
+  padding:0.8rem;
+  border-radius:15px;
+  color:white;
+  cursor:pointer;
+  width:100%;
+  font-weight:600;
+}
+
+/* MAIN */
+.main {
+  flex:1;
+  padding:2rem;
+}
+
+.header h1 {
+  font-size:1.8rem;
+  margin-bottom:2rem;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(220,38,38,0.2);
+  border-radius:20px;
+  padding:2rem;
+  display:flex;
+  gap:2rem;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:2rem;
+}
+
+.profile-logo {
+  width:140px;
+  height:140px;
+  border-radius:20px;
+  border:3px solid #dc2626;
+  background:white;
+  object-fit:cover;
+}
+
+.profile-info h2 { margin-bottom:0.5rem; }
+
+.profile-info p {
+  color:#94a3b8;
+  margin-bottom:0.4rem;
+}
+
+.profile-actions {
+  margin-top:1rem;
+}
+
+.btn {
+  padding:0.7rem 1.2rem;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn-edit { background:#3b82f6; color:white; }
+.btn-password { background:#f59e0b; color:#0b1219; }
+
+/* MODAL */
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content {
+  background:#151f2c;
+  padding:2rem;
+  border-radius:20px;
+  width:90%;
+  max-width:400px;
+  border:1px solid rgba(220,38,38,0.3);
+}
+
+.modal-content h3 {
+  margin-bottom:1rem;
+}
+
+.modal-content input {
+  width:100%;
+  padding:0.7rem;
+  margin-bottom:1rem;
+  border-radius:10px;
+  border:1px solid rgba(220,38,38,0.2);
+  background:#0b1219;
+  color:white;
+}
+
+.modal-buttons {
+  display:flex;
+  justify-content:space-between;
+}
+.nav button{
+  width:100%;
+  padding:1rem;
+  margin-bottom:1rem;
+  border:none;
+  border-radius:15px;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:rgba(220,38,38,0.15);
+  color:white;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div>
+    <div class="logo">Crimson<span>Shield</span></div>
+
+    <div class="nav">
+      <button onclick="goDashboard()">Dashboard</button>
+      <button onclick="goAddDonor()">Add Donor</button>
+      <button onclick="goFindBlood()">Find Blood</button>
+      <button onclick="goTrackDonor()">Track Donor</button>
+      <button onclick="goAnalytics()">Analytics</button>
+      <button onclick="goProfile()">Profile</button>
+    </div>
+  </div>
+
+  <button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="header">
+    <h1>Hospital Profile</h1>
+  </div>
+
+  <div class="profile-card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Hospital_icon.svg"
+         class="profile-logo">
+
+    <div class="profile-info">
+      <h2 id="hospitalName">CityCare Multispeciality Hospital</h2>
+      <p id="hospitalLocation">Bangalore, India</p>
+      <p id="hospitalEmail">contact@citycarehospital.com</p>
+      <p id="hospitalPhone">+91 98765 43210</p>
+
+      <div class="profile-actions">
+        <button class="btn btn-edit" onclick="openModal()">Edit Hospital Details</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h3>Edit Hospital Details</h3>
+    <input type="text" id="editName" placeholder="Hospital Name">
+    <input type="text" id="editLocation" placeholder="Location">
+    <input type="email" id="editEmail" placeholder="Email">
+    <input type="text" id="editPhone" placeholder="Phone">
+
+    <div class="modal-buttons">
+      <button class="btn btn-edit" onclick="saveChanges()">Save</button>
+      <button class="btn btn-password" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goDashboard(){
+    window.location.href="admin-dashboard.html";
+  }
+  
+  function goAddDonor(){
+    window.location.href="add-eligible-donor.html";
+  }
+  
+  function goFindBlood(){
+    window.location.href="contact-network.html";
+  }
+  
+  function goTrackDonor(){
+    window.location.href="ambulance-tracking.html";
+  }
+  function goAnalytics(){
+    window.location.href="analytics.html";
+  }
+  function goProfile(){
+    window.location.href="admin-profile.html";
+  }
+  
+  function logout(){
+    window.location.href="index.html";
+  }
+
+function openModal(){
+  document.getElementById("editModal").style.display="flex";
+
+  document.getElementById("editName").value =
+    document.getElementById("hospitalName").innerText;
+  document.getElementById("editLocation").value =
+    document.getElementById("hospitalLocation").innerText;
+  document.getElementById("editEmail").value =
+    document.getElementById("hospitalEmail").innerText;
+  document.getElementById("editPhone").value =
+    document.getElementById("hospitalPhone").innerText;
+}
+
+function closeModal(){
+  document.getElementById("editModal").style.display="none";
+}
+
+function saveChanges(){
+  document.getElementById("hospitalName").innerText =
+    document.getElementById("editName").value;
+  document.getElementById("hospitalLocation").innerText =
+    document.getElementById("editLocation").value;
+  document.getElementById("hospitalEmail").innerText =
+    document.getElementById("editEmail").value;
+  document.getElementById("hospitalPhone").innerText =
+    document.getElementById("editPhone").value;
+
+  closeModal();
+}
+</script>
+
+</body>
+</html>

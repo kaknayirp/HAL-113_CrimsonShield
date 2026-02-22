@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crimson Shield · Emergency Blood Command</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #e2e8f0;
+      overflow-x: hidden;
+      background: #1e0303; /* fallback solid */
+    }
+
+    /* Canvas fills entire background, behind all content */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none; /* so buttons stay clickable */
+    }
+
+    /* All content sits above canvas */
+    .hero, .info-section, footer {
+      position: relative;
+      z-index: 2;
+      background: transparent; /* let gradient + canvas show */
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background image overlay (kept from original, but now sits above canvas?) 
+       We'll make it subtle and blend. Actually we want it above canvas but semi-transparent. */
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      opacity: 0.08;
+      z-index: 1; /* between canvas and text */
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3; /* above overlay and canvas */
+      max-width: 900px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(145deg, #dc2626, #991b1b);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      box-shadow: 0 15px 35px rgba(220,38,38,0.4);
+    }
+
+    .logo-text {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .logo-text span {
+      color: #dc2626;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: white;
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-size: 1.1rem;
+      color: #94a3b8;
+    }
+
+    /* Buttons container */
+    .login-buttons {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .btn-admin {
+      background: linear-gradient(145deg,#ffffff, #f3f4f6);
+      color: rgb(220, 38, 38);
+      box-shadow: 0 12px 30px rgba(220,38,38,0.4);
+    }
+
+    .btn-admin:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(220,38,38,0.6);
+    }
+
+    .btn-user {
+      background: transparent;
+      border: 1px solid rgba(220,38,38,0.4);
+      color: #fca5a5;
+    }
+
+    .btn-user:hover {
+      background: rgba(220,38,38,0.1);
+      border-color: #dc2626;
+    }
+
+    /* NEW: Blood Bank button (matches theme) */
+    .btn-bloodbank {
+      background: transparent;
+      border: 1px solid #b91c1c;
+      color: #fecaca;
+      box-shadow: 0 0 15px rgba(185, 28, 28, 0.3);
+    }
+
+    .btn-bloodbank:hover {
+      background: rgba(185, 28, 28, 0.2);
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    /* ===== INFO SECTION ===== */
+    .info-section {
+      padding: 5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+      background: transparent; /* keep canvas visible behind */
+      backdrop-filter: blur(2px); /* subtle separation */
+    }
+
+    .info-image {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .info-image img {
+      width: 100%;
+      border-radius: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      border: 1px solid rgba(220,38,38,0.3);
+    }
+
+    .info-text {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(10, 5, 5, 0.4); /* semi-transparent to improve readability */
+      backdrop-filter: blur(4px);
+      padding: 2rem;
+      border-radius: 30px;
+      border: 1px solid rgba(220,38,38,0.2);
+    }
+
+    .info-text h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .info-text p {
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .highlight {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(220,38,38,0.2);
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(2px);
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Canvas for Three.js background (inserted as first element) -->
+  <div id="canvas-container"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+
+      <div class="logo">
+        <div class="logo-icon">🩸</div>
+        <div class="logo-text">
+          Crimson<span>Shield</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">
+        Real-Time Emergency Blood Coordination Platform
+      </h1>
+
+      <p class="hero-sub">
+        Connecting hospitals, blood banks, and donors instantly during life-critical emergencies.
+        Faster alerts. Quicker responses. More lives saved.
+      </p>
+
+      <div class="login-buttons">
+        <button class="btn btn-admin" onclick="window.location.href='admin/admin-login.html'">Admin Login</button>
+        <button class="btn btn-admin" onclick="window.location.href='donor/user-login.html'">Donor Login</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INFO SECTION -->
+  <section class="info-section">
+
+    <div class="info-image">
+      <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1974&auto=format&fit=crop" alt="Blood Donation">
+    </div>
+
+    <div class="info-text">
+      <h2>Why <span class="highlight">Crimson Shield</span>?</h2>
+      <p>
+        In emergencies, every minute counts. Crimson Shield ensures hospitals and blood banks can instantly
+        connect with eligible donors nearby — reducing response time and increasing survival rates.
+      </p>
+      <p>
+        Our system enables smart matching, live tracking, and rapid coordination — all in one command center.
+      </p>
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 Crimson Shield · Emergency Blood Command
+  </footer>
+
+  <!-- Three.js library -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.126.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    // --- setup scene, camera, renderer (exactly as provided, adapted for container) ---
+    const container = document.getElementById('canvas-container');
+    
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.set(-300, 100, 250);
+    
+    const scene = new THREE.Scene();
+    
+    // Match original gradient background (but canvas will cover it; we set clear color to dark red/black)
+    // Use fog and background similar to original CSS gradient feel
+    scene.background = new THREE.Color(0x1e0303); // deep red-black
+    const globalLight = new THREE.HemisphereLight(0xffffff, 0x555555, 0.2);
+    const shadowLight = new THREE.DirectionalLight(0xffffff, 1);
+    shadowLight.castShadow = true;
+    scene.add(shadowLight);
+    scene.add(globalLight);
+    scene.fog = new THREE.Fog(0x1e0303, 200, 750);
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); // false so background color shows
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    
+    // Append renderer's canvas to container div
+    container.appendChild(renderer.domElement);
+    
+    // --- BloodCell class ---
+    function BloodCell() {
+      this.mesh = new THREE.Group();
+      
+      const curveSpline = new THREE.SplineCurve([
+        new THREE.Vector2(0, 10),
+        new THREE.Vector2(30, 11),
+        new THREE.Vector2(60, 20),
+        new THREE.Vector2(90, 36),
+        new THREE.Vector2(110, 0),
+        new THREE.Vector2(90, -36),
+        new THREE.Vector2(60, -20),
+        new THREE.Vector2(30, -11),
+        new THREE.Vector2(0, -10)
+      ]);
+      
+      const splinePoints = curveSpline.getPoints(30);
+      const latheGeom = new THREE.LatheGeometry(splinePoints, 30);
+      // Use MeshStandard for better shading (but keep color #cc1414)
+      const cellMat = new THREE.MeshStandardMaterial({ color: 0xcc1414, side: THREE.DoubleSide, metalness: 0.0, roughness: 0.5, emissive: 0x330000 });
+      const bloodCell = new THREE.Mesh(latheGeom, cellMat);
+      
+      bloodCell.castShadow = true;
+      bloodCell.receiveShadow = true;
+      
+      this.mesh.add(bloodCell);
+    }
+    
+    const cellArray = [];
+    
+    function CellMultiplier() {
+      this.mesh = new THREE.Object3D();
+      
+      this.nCells = 200;
+      for (let i = 0; i < this.nCells; i++) {
+        const bc = new BloodCell();
+        bc.mesh.position.y = -1000 + Math.random() * 2000;
+        bc.mesh.position.x = -1000 + Math.random() * 2000;
+        bc.mesh.position.z = -500 + Math.random() * 1000;
+        bc.mesh.rotation.x = 0 - Math.random() * 3;
+        bc.mesh.rotation.y = 0 - Math.random() * 3;
+        bc.mesh.rotation.z = 0 - Math.random() * 3;
+        bc.mesh.scale.set(0.5, 0.4, 0.5);
+        this.mesh.add(bc.mesh);
+        cellArray.push(bc);
+      }
+    }
+    
+    const offset = 0.01 + Math.random() * 0.04;
+    
+    CellMultiplier.prototype.Flow = function() {
+      for (let i = 0; i < cellArray.length; i++) {
+        cellArray[i].mesh.rotation.y += offset + (i / 10000);
+        cellArray[i].mesh.rotation.x += 0.008;
+        cellArray[i].mesh.position.y -= 3;
+        cellArray[i].mesh.position.x -= 3;
+        
+        if (cellArray[i].mesh.position.y <= -1000) {
+          cellArray[i].mesh.position.y = 1000;
+        }
+        if (cellArray[i].mesh.position.x <= -1000) {
+          cellArray[i].mesh.position.x = 1000;
+        }
+      }
+    };
+    
+    // Instantiate and add to scene
+    const bloodCells = new CellMultiplier();
+    scene.add(bloodCells.mesh);
+    
+    // --- Animation loop ---
+    function animate() {
+      bloodCells.Flow();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    // --- Handle resize ---
+    window.addEventListener('resize', onWindowResize, false);
+    
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // For completeness, also set style of canvas to be fixed and behind
+    renderer.domElement.style.position = 'fixed';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.width = '100vw';
+    renderer.domElement.style.height = '100vh';
+    renderer.domElement.style.zIndex = '0';
+    renderer.domElement.style.pointerEvents = 'none';
+    
+    // Also set container to fixed and full screen (already via CSS but ensure)
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100vw';
+    container.style.height = '100vh';
+    container.style.zIndex = '0';
+    container.style.pointerEvents = 'none';
+    
+  </script>
+
+  <!-- Original simple JS for button alerts (now updated with direct navigation) 
+       The buttons themselves already have onclick handlers in HTML, but we keep the 
+       bloodBankLogin function in case you want to re-add that button later. -->
+  <script>
+    // Keeping original functions for reference or future use; not used currently
+    // Admin and Donor logins are handled directly in the onclick attributes.
+    function adminLogin() {
+      window.location.href = "/Users/priyankak/Desktop/crimson/admin/admin-login.html";
+    }
+    function userLogin() {
+      window.location.href = "/Users/priyankak/Desktop/crimson/donor/user-login.html";
+    }
+    function bloodBankLogin() {
+      alert("Blood Bank Login Clicked");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://lkflnzxcbwlmxounerex.supabase.co";
+    const supabaseKey = "sb_publishable_SqucPk5SOnBhLL6goXwxIQ_jDVlIy3x";
+    
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    
+      async function testDatabase() {
+        const { data, error } = await supabaseClient
+          .from("donors")
+          .select("*");
+      
+        if (error) {
+          console.error("Database Error:", error);
+        } else {
+          console.log("Database Data:", data);
+        }
+      }
+      
+      
+      testDatabase();
+
+        async function insertTestDonor() {
+          const { data, error } = await supabaseClient
+            .from("donors")
+            .insert([
+              {
+                name: "Frontend Donor",
+                phone: "9999999999",
+                blood_group: "A+",
+                latitude: 12.9716,
+                longitude: 77.5946,
+                is_available: true
+              }
+            ]);
+        
+          if (error) {
+            console.error("Insert Error:", error);
+          } else {
+            console.log("Insert Success:", data);
+          }
+        }
+        
+        
+
+    
+    console.log("Supabase Client Created");
+    
+    </script>
+    
+  
+  <!-- Note: The HTML buttons now directly use window.location.href, which matches the requirement 
+       "upon clicking admin login, direct it to admin-login.html, and upon clicking donor login, 
+        direct it to user-login.html". All original design and three.js background remain unchanged. -->
+</body>
+</html>

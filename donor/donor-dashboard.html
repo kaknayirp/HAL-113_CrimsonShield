@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Donor Dashboard · Crimson Shield</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: linear-gradient(135deg, #0b1219 0%, #151f2c 100%);
+  color: #e2e8f0;
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width:260px;
+  background: rgba(18,25,35,0.95);
+  border-right:1px solid rgba(220,38,38,0.2);
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+}
+
+.logo { font-size:1.6rem; font-weight:800; margin-bottom:3rem; }
+.logo span { color:#dc2626; }
+
+.nav button {
+  width:100%;
+  padding:1rem;
+  margin-bottom:1rem;
+  border:none;
+  border-radius:15px;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  cursor:pointer;
+  transition:0.3s;
+  font-weight:600;
+}
+
+.nav button:hover,
+.nav button.active {
+  background: rgba(220,38,38,0.15);
+  color:white;
+}
+
+.logout {
+  margin-top:auto;
+  background:#dc2626;
+  border:none;
+  padding:0.8rem;
+  border-radius:15px;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* MAIN */
+.main { flex:1; padding:2rem; }
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:2rem;
+}
+
+.status-badge {
+  padding:0.4rem 1rem;
+  border-radius:20px;
+  font-size:0.8rem;
+  font-weight:600;
+}
+
+.card {
+  background: rgba(255,255,255,0.03);
+  border:1px solid rgba(220,38,38,0.2);
+  border-radius:20px;
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+}
+
+.alert {
+  background: rgba(220,38,38,0.1);
+  border:1px solid rgba(220,38,38,0.4);
+  padding:1rem;
+  border-radius:15px;
+  margin-bottom:1rem;
+}
+
+.alert strong { color:#f87171; }
+
+.btn {
+  padding:0.6rem 1.2rem;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:600;
+  margin-right:0.5rem;
+  margin-top:0.5rem;
+}
+
+.accept { background:#10b981; color:#0b1219; }
+.decline { background:#ef4444; color:white; }
+
+select {
+  padding:0.6rem 1rem;
+  border-radius:12px;
+  border:1px solid rgba(220,38,38,0.3);
+  background:rgba(0,0,0,0.3);
+  color:white;
+  margin-top:0.5rem;
+}
+
+table { width:100%; border-collapse:collapse; }
+th, td {
+  padding:0.8rem;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+th { font-size:0.85rem; color:#94a3b8; }
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div>
+    <div class="logo">Crimson<span>Shield</span></div>
+    <div class="nav">
+      <button onclick="goDashboard()">Dashboard</button>
+      <button onclick="goEligibility()">Update Eligibility</button>
+      <button onclick="goRewards()">Rewards</button>
+      <button onclick="goFeedback()">Feedback</button>
+      <button onclick="goProfile()">Profile</button>
+    </div>
+  </div>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h1>Welcome, Ravi 👋</h1>
+    <span class="status-badge" id="headerStatus" style="background:#10b981;color:#0b1219;">
+      Available
+    </span>
+  </div>
+
+  <div class="card">
+    <h3>🚨 Active Blood Requests</h3>
+    <div class="alert">
+      <strong>Blood Required</strong><br/>
+      City Hospital · 2 Units
+      <br/><br/>
+      <button class="btn accept" onclick="respond('accepted')">Accept</button>
+      <button class="btn decline" onclick="respond('declined')">Decline</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Availability Status</h3>
+
+    <button class="btn accept" onclick="setAvailable()"> Available Now</button>
+
+    <div style="margin-top:1rem;">
+      <label style="color:#94a3b8;font-size:0.9rem;">
+        Not Available For:
+      </label><br>
+      <select id="timeSelect">
+        <option value="1800000">30 Minutes</option>
+        <option value="3600000">1 Hour</option>
+      </select>
+      <button class="btn decline" onclick="setNotAvailable()">
+        Set Not Available
+      </button>
+    </div>
+
+    <div id="availabilityText" style="margin-top:1rem;font-weight:600;">
+      Current Status: Available for Emergency Calls
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🩸 Recent Donations</h3>
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Hospital</th>
+        <th>Blood Group</th>
+      </tr>
+      <tr>
+        <td>12 Jan 2026</td>
+        <td>City Hospital</td>
+        <td>O+</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+let availabilityTimer;
+
+function setAvailable(){
+  document.getElementById("availabilityText").innerText =
+    "Current Status: Available for Emergency Calls";
+  document.getElementById("availabilityText").style.color="#10b981";
+  document.getElementById("headerStatus").style.background="#10b981";
+  document.getElementById("headerStatus").style.color="#0b1219";
+  document.getElementById("headerStatus").innerText="Available";
+  clearTimeout(availabilityTimer);
+}
+
+function setNotAvailable(){
+  const selectedTime = parseInt(document.getElementById("timeSelect").value);
+
+  document.getElementById("availabilityText").innerText =
+    "Current Status: Not Available";
+  document.getElementById("availabilityText").style.color="#f87171";
+  document.getElementById("headerStatus").style.background="#ef4444";
+  document.getElementById("headerStatus").style.color="white";
+  document.getElementById("headerStatus").innerText="Not Available";
+
+  clearTimeout(availabilityTimer);
+  availabilityTimer = setTimeout(setAvailable, selectedTime);
+}
+
+function respond(status){ alert("You have " + status + " the request."); }
+
+/* ✅ UPDATED NAVIGATION */
+function goDashboard(){ window.location.href="donor-dashboard.html"; }
+function goEligibility(){ window.location.href="update-health.html"; }
+function goProfile(){ window.location.href="donor-profile.html"; }
+function goRewards(){ window.location.href="donor-rewards.html"; }
+function goFeedback(){ window.location.href="donor-feedback.html"; }
+function logout(){ window.location.href="index.html"; }
+
+</script>
+
+</body>
+</html>

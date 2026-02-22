@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Eligible Donor · Crimson Shield</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:linear-gradient(135deg,#0b1219 0%,#151f2c 100%);
+  color:#e2e8f0;
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:260px;
+  background:rgba(18,25,35,0.95);
+  border-right:1px solid rgba(220,38,38,0.2);
+  padding:2rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+}
+
+.logo{
+  font-size:1.6rem;
+  font-weight:800;
+  margin-bottom:3rem;
+}
+.logo span{ color:#dc2626; }
+
+.nav button{
+  width:100%;
+  padding:1rem;
+  margin-bottom:1rem;
+  border:none;
+  border-radius:15px;
+  background:transparent;
+  color:#94a3b8;
+  text-align:left;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:rgba(220,38,38,0.15);
+  color:white;
+}
+
+.sidebar-footer{
+  margin-top:auto;
+}
+
+.logout{
+  background:#dc2626;
+  border:none;
+  padding:0.8rem;
+  border-radius:15px;
+  color:white;
+  cursor:pointer;
+  width:100%;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:2rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* HEADER */
+.header{
+  width:100%;
+  max-width:600px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:2rem;
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(220,38,38,0.2);
+  border-radius:20px;
+  padding:2rem;
+  width:100%;
+  max-width:600px;
+  margin-bottom:2rem;
+}
+
+.card input,
+.card select{
+  width:100%;
+  padding:0.8rem;
+  margin-bottom:1rem;
+  border-radius:10px;
+  border:1px solid rgba(220,38,38,0.2);
+  background:rgba(0,0,0,0.3);
+  color:white;
+}
+
+.card label{
+  font-size:0.9rem;
+  color:#94a3b8;
+  margin-bottom:0.4rem;
+  display:block;
+}
+
+.consent-box{
+  background:rgba(255,255,255,0.02);
+  padding:1rem;
+  border-radius:10px;
+  border:1px solid rgba(220,38,38,0.2);
+  margin-bottom:1rem;
+}
+
+.button-center{
+  display:flex;
+  justify-content:center;
+  margin-top:1.5rem;
+}
+
+.btn{
+  background:linear-gradient(145deg,#dc2626,#b91c1c);
+  color:white;
+  padding:0.9rem 2rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.btn:hover{
+  opacity:0.9;
+  transform:translateY(-2px);
+}
+
+/* CSV DROP ZONE */
+.drop-zone{
+  border:2px dashed rgba(220,38,38,0.6);
+  border-radius:15px;
+  padding:2rem;
+  text-align:center;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.drop-zone.dragover{
+  background:rgba(220,38,38,0.1);
+  border-color:#dc2626;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div>
+    <div class="logo">Crimson<span>Shield</span></div>
+
+    <div class="nav">
+      <button onclick="goDashboard()">Dashboard</button>
+      <button onclick="goAddDonor()">Add Donor</button>
+      <button onclick="goFindBlood()">Find Blood</button>
+      <button onclick="goTrackDonor()">Track Donor</button>
+      <button onclick="goAnalytics()">Analytics</button>
+      <button onclick="goProfile()">Profile</button>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h1>🩸 Add Eligible Donor</h1>
+  </div>
+
+  <!-- MANUAL ENTRY -->
+  <div class="card">
+
+    <label>Donor Name</label>
+    <input type="text" id="name">
+
+    <label>Email Address</label>
+    <input type="email" id="email">
+
+    <label>Contact Number</label>
+    <input type="text" id="phone">
+
+    <label>Gender</label>
+    <select id="gender">
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+
+    <label>Blood Group</label>
+    <select id="blood">
+      <option value="">Select Blood Group</option>
+      <option>O+</option>
+      <option>O-</option>
+      <option>A+</option>
+      <option>B+</option>
+      <option>AB+</option>
+    </select>
+
+    <label>Last Donation Date</label>
+    <input type="date" id="lastDonation">
+
+    <div class="consent-box">
+      <input type="checkbox" id="medicalConsent">
+      <label for="medicalConsent">
+        I confirm that the donor has voluntarily agreed to share their personal and medical eligibility details and has provided informed consent.
+      </label>
+    </div>
+
+    <div class="button-center">
+      <!-- ✅ MODIFICATION: addDonor() now redirects to donor-success.html -->
+      <button class="btn" onclick="addDonor()">Add Donor</button>
+    </div>
+
+  </div>
+
+  <!-- CSV UPLOAD -->
+  <div class="card">
+    <h3>Upload Donors via CSV</h3>
+
+    <div class="drop-zone" id="dropZone">
+      Drag & Drop CSV file here<br>or Click to Select
+      <input type="file" id="csvFile" accept=".csv" hidden>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function goDashboard(){
+    window.location.href="admin-dashboard.html";
+  }
+  
+  function goAddDonor(){
+    window.location.href="add-eligible-donor.html";
+  }
+  
+  function goFindBlood(){
+    window.location.href="contact-network.html";
+  }
+  
+  function goTrackDonor(){
+    window.location.href="ambulance-tracking.html";
+  }
+  function goAnalytics(){
+    window.location.href="analytics.html";
+  }
+  function goProfile(){
+    window.location.href="admin-profile.html";
+  }
+  
+  function logout(){
+    window.location.href="index.html";
+  }
+  
+  // Single addDonor function that navigates
+  function addDonor(){
+    window.location.href="donor-success.html";
+  }
+  
+  /* Set max date */
+  document.getElementById("lastDonation").max =
+    new Date().toISOString().split("T")[0];
+  
+  function validateEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+  
+  function checkDonationEligibility(date){
+    const last=new Date(date);
+    const today=new Date();
+    const diff=(today-last)/(1000*60*60*24);
+    return diff>=90;
+  }
+
+</script>
+
+</body>
+</html>

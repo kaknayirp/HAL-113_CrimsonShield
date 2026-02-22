@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Success · Crimson Shield</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:linear-gradient(135deg,#0b1219 0%,#151f2c 100%);
+  color:#e2e8f0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+
+.success-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(220,38,38,0.3);
+  border-radius:25px;
+  padding:3rem;
+  text-align:center;
+  width:400px;
+  animation:fadeIn 0.5s ease-in-out;
+}
+
+.success-icon{
+  font-size:4rem;
+  color:#10b981;
+  margin-bottom:1rem;
+}
+
+.success-card h2{
+  margin-bottom:0.5rem;
+}
+
+.success-card p{
+  color:#94a3b8;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div class="success-card">
+  <div class="success-icon">✅</div>
+  <h2>Donor(s) Added Successfully</h2>
+  <p>Redirecting back...</p>
+</div>
+
+<script>
+setTimeout(()=>{
+  window.location.href="add-eligible-donor.html";
+},3500);
+</script>
+
+</body>
+</html>
